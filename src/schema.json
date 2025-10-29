@@ -1,0 +1,242 @@
+{
+  "$defs": {
+    "event": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "duration": {
+          "$ref": "#/$defs/note-value"
+        },
+        "notes": {
+          "$ref": "#/$defs/notes"
+        },
+        "rest": {
+          "$ref": "#/$defs/rest"
+        }
+      },
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "global-attrs": {
+      "properties": {
+        "_c": {
+          "$ref": "#/$defs/string"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "type": "object"
+    },
+    "id": {
+      "type": "string"
+    },
+    "note": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "pitch": {
+          "$ref": "#/$defs/pitch"
+        },
+        "staff": {
+          "$ref": "#/$defs/staff"
+        }
+      },
+      "required": [
+        "pitch"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "note-value": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "base": {
+          "$ref": "#/$defs/note-value-base"
+        },
+        "dots": {
+          "$ref": "#/$defs/positive-integer"
+        }
+      },
+      "required": [
+        "base"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "note-value-base": {
+      "enum": [
+        "whole",
+        "half",
+        "quarter",
+        "eighth"
+      ],
+      "type": "string"
+    },
+    "note-value-quantity": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "duration": {
+          "$ref": "#/$defs/note-value"
+        },
+        "multiple": {
+          "$ref": "#/$defs/positive-integer"
+        }
+      },
+      "required": [
+        "duration",
+        "multiple"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "notes": {
+      "items": {
+        "$ref": "#/$defs/note"
+      },
+      "type": "array"
+    },
+    "octave": {
+      "type": "integer"
+    },
+    "pitch": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "octave": {
+          "$ref": "#/$defs/octave"
+        },
+        "step": {
+          "$ref": "#/$defs/step"
+        }
+      },
+      "required": [
+        "octave",
+        "step"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "positive-integer": {
+      "type": "integer"
+    },
+    "rest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "staffPosition": {
+          "$ref": "#/$defs/staff"
+        }
+      },
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "sequence": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/sequence-content"
+        },
+        "staff": {
+          "$ref": "#/$defs/staff"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    },
+    "sequence-content": {
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/event"
+          },
+          {
+            "$ref": "#/$defs/tuplet"
+          }
+        ]
+      },
+      "type": "array"
+    },
+    "sequence-list": {
+      "items": {
+        "$ref": "#/$defs/sequence"
+      },
+      "type": "array"
+    },
+    "staff": {
+      "type": "integer"
+    },
+    "step": {
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "type": "string"
+    },
+    "string": {
+      "type": "string"
+    },
+    "tuplet": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/global-attrs"
+        }
+      ],
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/sequence-content"
+        },
+        "inner": {
+          "$ref": "#/$defs/note-value-quantity"
+        },
+        "outer": {
+          "$ref": "#/$defs/note-value-quantity"
+        }
+      },
+      "required": [
+        "content",
+        "inner",
+        "outer"
+      ],
+      "type": "object",
+      "unevaluatedProperties": false
+    }
+  },
+  "$id": "https://w3c.github.io/mnx/docs/mnx-schema.json?modified=extensively",
+  "$ref": "#/$defs/sequence",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Generated .rs code should be free of `subtype_0` field names",
+  "title": "test"
+}
