@@ -7,7 +7,8 @@
 //! Official documentation: <https://w3c.github.io/mnx/docs/>
 //!
 //! Official schema: <https://w3c.github.io/mnx/docs/mnx-schema.json>
-
+//!
+//! Run: cargo install cargo-typify && cargo typify mnx-schema.json
 #![allow(unused)]
 #![allow(clippy::derivable_impls)]
 #![allow(clippy::redundant_closure_call)]
@@ -9818,6 +9819,9 @@ impl ::std::convert::From<GlobalAttrs> for Tenuto {
 #[doc = "    },"]
 #[doc = "    \"target\": {"]
 #[doc = "      \"$ref\": \"#/$defs/id\""]
+#[doc = "    },"]
+#[doc = "    \"targetType\": {"]
+#[doc = "      \"$ref\": \"#/$defs/tie-target-type\""]
 #[doc = "    }"]
 #[doc = "  },"]
 #[doc = "  \"unevaluatedProperties\": false"]
@@ -9841,6 +9845,12 @@ pub struct Tie {
     #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
     pub target: ::std::option::Option<Id>,
     #[serde(
+        rename = "targetType",
+        default,
+        skip_serializing_if = "::std::option::Option::is_none"
+    )]
+    pub target_type: ::std::option::Option<TieTargetType>,
+    #[serde(
         rename = "_x",
         default,
         skip_serializing_if = "::std::option::Option::is_none"
@@ -9860,6 +9870,7 @@ impl ::std::default::Default for Tie {
             lv: Default::default(),
             side: Default::default(),
             target: Default::default(),
+            target_type: Default::default(),
             x: Default::default(),
         }
     }
@@ -9904,6 +9915,93 @@ impl ::std::convert::From<&TieList> for TieList {
 impl ::std::convert::From<::std::vec::Vec<Tie>> for TieList {
     fn from(value: ::std::vec::Vec<Tie>) -> Self {
         Self(value)
+    }
+}
+#[doc = "`TieTargetType`"]
+#[doc = r""]
+#[doc = r" <details><summary>JSON schema</summary>"]
+#[doc = r""]
+#[doc = r" ```json"]
+#[doc = "{"]
+#[doc = "  \"type\": \"string\","]
+#[doc = "  \"enum\": ["]
+#[doc = "    \"nextNote\","]
+#[doc = "    \"crossVoice\","]
+#[doc = "    \"arpeggio\","]
+#[doc = "    \"crossJump\""]
+#[doc = "  ]"]
+#[doc = "}"]
+#[doc = r" ```"]
+#[doc = r" </details>"]
+#[derive(
+    :: serde :: Deserialize,
+    :: serde :: Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+)]
+pub enum TieTargetType {
+    #[serde(rename = "nextNote")]
+    NextNote,
+    #[serde(rename = "crossVoice")]
+    CrossVoice,
+    #[serde(rename = "arpeggio")]
+    Arpeggio,
+    #[serde(rename = "crossJump")]
+    CrossJump,
+}
+impl ::std::convert::From<&Self> for TieTargetType {
+    fn from(value: &TieTargetType) -> Self {
+        value.clone()
+    }
+}
+impl ::std::fmt::Display for TieTargetType {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::NextNote => f.write_str("nextNote"),
+            Self::CrossVoice => f.write_str("crossVoice"),
+            Self::Arpeggio => f.write_str("arpeggio"),
+            Self::CrossJump => f.write_str("crossJump"),
+        }
+    }
+}
+impl ::std::str::FromStr for TieTargetType {
+    type Err = self::error::ConversionError;
+    fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "nextNote" => Ok(Self::NextNote),
+            "crossVoice" => Ok(Self::CrossVoice),
+            "arpeggio" => Ok(Self::Arpeggio),
+            "crossJump" => Ok(Self::CrossJump),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+impl ::std::convert::TryFrom<&str> for TieTargetType {
+    type Error = self::error::ConversionError;
+    fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String> for TieTargetType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String> for TieTargetType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
     }
 }
 #[doc = "`Time`"]
@@ -18109,6 +18207,10 @@ pub mod builder {
         lv: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
         side: ::std::result::Result<::std::option::Option<super::SlurSide>, ::std::string::String>,
         target: ::std::result::Result<::std::option::Option<super::Id>, ::std::string::String>,
+        target_type: ::std::result::Result<
+            ::std::option::Option<super::TieTargetType>,
+            ::std::string::String,
+        >,
         x: ::std::result::Result<
             ::std::option::Option<super::VendorExtensions>,
             ::std::string::String,
@@ -18122,6 +18224,7 @@ pub mod builder {
                 lv: Ok(Default::default()),
                 side: Ok(Default::default()),
                 target: Ok(Default::default()),
+                target_type: Ok(Default::default()),
                 x: Ok(Default::default()),
             }
         }
@@ -18177,6 +18280,16 @@ pub mod builder {
                 .map_err(|e| format!("error converting supplied value for target: {}", e));
             self
         }
+        pub fn target_type<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<::std::option::Option<super::TieTargetType>>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.target_type = value
+                .try_into()
+                .map_err(|e| format!("error converting supplied value for target_type: {}", e));
+            self
+        }
         pub fn x<T>(mut self, value: T) -> Self
         where
             T: ::std::convert::TryInto<::std::option::Option<super::VendorExtensions>>,
@@ -18197,6 +18310,7 @@ pub mod builder {
                 lv: value.lv?,
                 side: value.side?,
                 target: value.target?,
+                target_type: value.target_type?,
                 x: value.x?,
             })
         }
@@ -18209,6 +18323,7 @@ pub mod builder {
                 lv: Ok(value.lv),
                 side: Ok(value.side),
                 target: Ok(value.target),
+                target_type: Ok(value.target_type),
                 x: Ok(value.x),
             }
         }
