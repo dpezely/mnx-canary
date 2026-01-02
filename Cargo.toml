@@ -8,3 +8,7 @@ description = "Exercise draft schema from W3C MNX using typify"
 regress = "0.10"
 serde = {version="1.0", features=["derive"]}
 serde_json = "1.0"
+
+[package.metadata.docs.rs]
+all-features = true
+rsutdoc-args = ["--cfg", "docsrs", "--document-private-items", "--no-deps"]

@@ -7,8 +7,10 @@
 //! Official documentation: <https://w3c.github.io/mnx/docs/>
 //!
 //! Official schema: <https://w3c.github.io/mnx/docs/mnx-schema.json>
-
+//!
+//! Run: cargo install cargo-typify && cargo typify mnx-schema.json
 #![allow(unused)]
+#![allow(clippy::derivable_impls)]
 #![allow(clippy::redundant_closure_call)]
 #![allow(clippy::needless_lifetimes)]
 #![allow(clippy::match_single_binding)]
