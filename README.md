@@ -44,13 +44,16 @@ Expected versus observed:
 JSON](https://github.com/w3c/mnx/blob/main/docs/static/examples/json/tuplets.json)
   fails to parse into a `Tuplet` struct when using
 [their schema](https://github.com/w3c/mnx/blob/main/docs/mnx-schema.json)
-- Walking the chain of structs and enums from [Root](doc/mnx/mnx/struct.Root.html),
+- Walking the chain of structs and enums from [Root](doc/mnx/mnx/struct.Root.html)
+  ([via GitHubRAW](https://githubraw.com/dpezely/mnx-canary/dpezely/parse-failure-of-mnx-tuplets/doc/mnx_canary/mnx/struct.Root.html)),
   the logical flow indicates
   [SequenceContentItem](doc/mnx/mnx/struct.SequenceContentItem.html) `::tuple`
+  ([via GitHubRAW](https://githubraw.com/dpezely/mnx-canary/dpezely/parse-failure-of-mnx-tuplets/doc/mnx_canary/mnx/struct.SequenceContentItem.html))
   should be populated but remains `None`
 - Instead, `SequenceContentItem::event` when unwrapped reveals its inner
   [Event](doc/mnx/mnx/struct.Event.html)
   `::type_` contains `Some(LiteralStringEvent("tuplet"))`
+  ([via GitHubRAW](https://githubraw.com/dpezely/mnx-canary/dpezely/parse-failure-of-mnx-tuplets/doc/mnx_canary/mnx/struct.Event.html))
 
 Possible scenarios:
 
