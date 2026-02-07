@@ -32,6 +32,66 @@ mod test {
     /// <https://github.com/w3c/mnx/tree/main/docs/static/examples/json>
     const JSON_PATH: &str = "w3c-mnx/docs/static/examples/json";
 
+    /// Extracted list of all example JSON file names from W3C's repo.
+    ///
+    /// Contents of this array can be populated using the following
+    /// shell command:
+    ///
+    /// ```bash
+    /// cd ../w3c-mnx/docs/static/examples/json/
+    /// for x in *.json; do echo '"'${x}'",'; done
+    /// ```
+    const JSON_FILES: [&str; 48] = [
+        "accidentals.json",
+        "articulations.json",
+        "beam-hooks.json",
+        "beams-across-barlines.json",
+        "beams-inner-grace-notes.json",
+        "beams-secondary-beam-breaks-implied.json",
+        "beams-secondary-beam-breaks.json",
+        "beams.json",
+        "clef-changes.json",
+        "dotted-notes.json",
+        "dynamics.json",
+        "grace-note.json",
+        "grace-notes-beamed.json",
+        "grand-staff.json",
+        "hello-world.json",
+        "jumps-dal-segno.json",
+        "jumps-ds-al-fine.json",
+        "key-signatures.json",
+        "lyric-line-metadata.json",
+        "lyrics-basic.json",
+        "lyrics-multi-line.json",
+        "multi-note-tremolos.json",
+        "multimeasure-rests.json",
+        "multiple-layouts.json",
+        "multiple-voices.json",
+        "orchestral-layout.json",
+        "organ-layout.json",
+        "ottavas-8va.json",
+        "parts.json",
+        "repeats-alternate-endings-advanced.json",
+        "repeats-alternate-endings-simple.json",
+        "repeats-implied-start-repeat.json",
+        "repeats-more-once-repeated.json",
+        "repeats.json",
+        "rest-positions.json",
+        "single-note-tremolos.json",
+        "slurs-chords.json",
+        "slurs-targeting-specific-notes.json",
+        "slurs.json",
+        "system-layouts.json",
+        "tempo-markings.json",
+        "three-note-chord-and-half-rest.json",
+        "tie-target-type.json",
+        "ties.json",
+        "time-signature-glyphs.json",
+        "time-signatures.json",
+        "tuplets.json",
+        "two-bar-c-major-scale.json",
+    ];
+
     /// Canonical "hello, world" example JSON file name from W3C's repo.
     const HELLO_WORLD_JSON: &str = "hello-world.json";
 
@@ -42,6 +102,43 @@ mod test {
         let json = read_to_string(file_path).expect("Read existing JSON file");
         serde_json::from_str::<MnxDocument>(&json)
             .expect("Deserialize JSON to struct derived from W3C schema")
+    }
+
+    /// Confirm all W3C examples can be deserialized using code
+    /// generated from their schema.
+    #[test]
+    fn test_read_official_json_examples() {
+        for file_name in JSON_FILES {
+            let doc = from_file(file_name);
+            let MnxDocument(Root { mnx, global, parts, scores, .. }) = doc;
+
+            let Mnx { version: VersionNumber(v), .. } = mnx;
+            assert_eq!(MNX_VERSION, v);
+
+            for part in parts.0.iter() {
+                let PartMeasures(measures) = &part.measures;
+                assert_eq!(global.measures.len(), measures.len());
+            }
+
+            if let Some(Scores(scores_list)) = scores {
+                for score in scores_list {
+                    assert!(!score.name.is_empty());
+                }
+            }
+
+            let Parts(parts) = parts;
+            for part in parts {
+                let Part { measures: PartMeasures(part_measures), ..} = part;
+                for PartMeasure { sequences, ..} in part_measures {
+                    let SequenceList(sequences) = sequences;
+                    for Sequence { content: SequenceContent(content), .. } in sequences {
+                        for item in content {
+                            let SequenceContentItem { event: _, grace: _, tuplet: _, space: _, multi_note_tremolo: _ } = item;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /// Confirm "Hello, world" example by exercising all observable aspects.
