@@ -77,7 +77,7 @@ mod test {
         let Parts(parts) = parts;
         assert_eq!(1, parts.len());
         let Part { id, kit, measures, name, short_name, staves, transposition, .. } = &parts[0];
-        assert!(measures.is_some());
+        assert!(!measures.is_empty());
         assert!(id.is_none());
         assert!(kit.is_none());
         assert!(name.is_none());
@@ -85,7 +85,7 @@ mod test {
         assert!(staves.is_none());
         assert!(transposition.is_none());
 
-        let Some(PartMeasures(measures)) = measures else { panic!() };
+        let PartMeasures(measures) = measures;
         let PartMeasure { clefs, sequences, .. } = &measures[0];
         assert!(clefs.is_some());
 
