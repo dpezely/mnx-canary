@@ -7,8 +7,10 @@
 //! Official documentation: <https://w3c.github.io/mnx/docs/>
 //!
 //! Official schema: <https://w3c.github.io/mnx/docs/mnx-schema.json>
-
+//!
+//! Run: cargo install cargo-typify && cargo typify mnx-schema.json
 #![allow(unused)]
+#![allow(clippy::derivable_impls)]
 #![allow(clippy::redundant_closure_call)]
 #![allow(clippy::needless_lifetimes)]
 #![allow(clippy::match_single_binding)]
@@ -6686,7 +6688,7 @@ impl Sequence {
 #[doc = "{"]
 #[doc = "  \"type\": \"array\","]
 #[doc = "  \"items\": {"]
-#[doc = "    \"anyOf\": ["]
+#[doc = "    \"oneOf\": ["]
 #[doc = "      {"]
 #[doc = "        \"$ref\": \"#/$defs/event\""]
 #[doc = "      },"]
@@ -6732,7 +6734,7 @@ impl ::std::convert::From<::std::vec::Vec<SequenceContentItem>> for SequenceCont
 #[doc = r""]
 #[doc = r" ```json"]
 #[doc = "{"]
-#[doc = "  \"anyOf\": ["]
+#[doc = "  \"oneOf\": ["]
 #[doc = "    {"]
 #[doc = "      \"$ref\": \"#/$defs/event\""]
 #[doc = "    },"]
@@ -6753,52 +6755,37 @@ impl ::std::convert::From<::std::vec::Vec<SequenceContentItem>> for SequenceCont
 #[doc = r" ```"]
 #[doc = r" </details>"]
 #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-pub struct SequenceContentItem {
-    #[serde(
-        flatten,
-        default,
-        skip_serializing_if = "::std::option::Option::is_none"
-    )]
-    pub event: ::std::option::Option<Event>,
-    #[serde(
-        flatten,
-        default,
-        skip_serializing_if = "::std::option::Option::is_none"
-    )]
-    pub grace: ::std::option::Option<Grace>,
-    #[serde(
-        flatten,
-        default,
-        skip_serializing_if = "::std::option::Option::is_none"
-    )]
-    pub tuplet: ::std::option::Option<Tuplet>,
-    #[serde(
-        flatten,
-        default,
-        skip_serializing_if = "::std::option::Option::is_none"
-    )]
-    pub space: ::std::option::Option<Space>,
-    #[serde(
-        flatten,
-        default,
-        skip_serializing_if = "::std::option::Option::is_none"
-    )]
-    pub multi_note_tremolo: ::std::option::Option<MultiNoteTremolo>,
+#[serde(untagged)]
+pub enum SequenceContentItem {
+    Event(Event),
+    Grace(Grace),
+    Tuplet(Tuplet),
+    Space(Space),
+    MultiNoteTremolo(MultiNoteTremolo),
 }
-impl ::std::default::Default for SequenceContentItem {
-    fn default() -> Self {
-        Self {
-            event: Default::default(),
-            grace: Default::default(),
-            tuplet: Default::default(),
-            space: Default::default(),
-            multi_note_tremolo: Default::default(),
-        }
+impl ::std::convert::From<Event> for SequenceContentItem {
+    fn from(value: Event) -> Self {
+        Self::Event(value)
     }
 }
-impl SequenceContentItem {
-    pub fn builder() -> builder::SequenceContentItem {
-        Default::default()
+impl ::std::convert::From<Grace> for SequenceContentItem {
+    fn from(value: Grace) -> Self {
+        Self::Grace(value)
+    }
+}
+impl ::std::convert::From<Tuplet> for SequenceContentItem {
+    fn from(value: Tuplet) -> Self {
+        Self::Tuplet(value)
+    }
+}
+impl ::std::convert::From<Space> for SequenceContentItem {
+    fn from(value: Space) -> Self {
+        Self::Space(value)
+    }
+}
+impl ::std::convert::From<MultiNoteTremolo> for SequenceContentItem {
+    fn from(value: MultiNoteTremolo) -> Self {
+        Self::MultiNoteTremolo(value)
     }
 }
 #[doc = "`SequenceList`"]
@@ -15802,105 +15789,6 @@ pub mod builder {
                 staff: Ok(value.staff),
                 voice: Ok(value.voice),
                 x: Ok(value.x),
-            }
-        }
-    }
-    #[derive(Clone, Debug)]
-    pub struct SequenceContentItem {
-        event: ::std::result::Result<::std::option::Option<super::Event>, ::std::string::String>,
-        grace: ::std::result::Result<::std::option::Option<super::Grace>, ::std::string::String>,
-        tuplet: ::std::result::Result<::std::option::Option<super::Tuplet>, ::std::string::String>,
-        space: ::std::result::Result<::std::option::Option<super::Space>, ::std::string::String>,
-        multi_note_tremolo: ::std::result::Result<
-            ::std::option::Option<super::MultiNoteTremolo>,
-            ::std::string::String,
-        >,
-    }
-    impl ::std::default::Default for SequenceContentItem {
-        fn default() -> Self {
-            Self {
-                event: Ok(Default::default()),
-                grace: Ok(Default::default()),
-                tuplet: Ok(Default::default()),
-                space: Ok(Default::default()),
-                multi_note_tremolo: Ok(Default::default()),
-            }
-        }
-    }
-    impl SequenceContentItem {
-        pub fn event<T>(mut self, value: T) -> Self
-        where
-            T: ::std::convert::TryInto<::std::option::Option<super::Event>>,
-            T::Error: ::std::fmt::Display,
-        {
-            self.event = value
-                .try_into()
-                .map_err(|e| format!("error converting supplied value for event: {e}"));
-            self
-        }
-        pub fn grace<T>(mut self, value: T) -> Self
-        where
-            T: ::std::convert::TryInto<::std::option::Option<super::Grace>>,
-            T::Error: ::std::fmt::Display,
-        {
-            self.grace = value
-                .try_into()
-                .map_err(|e| format!("error converting supplied value for grace: {e}"));
-            self
-        }
-        pub fn tuplet<T>(mut self, value: T) -> Self
-        where
-            T: ::std::convert::TryInto<::std::option::Option<super::Tuplet>>,
-            T::Error: ::std::fmt::Display,
-        {
-            self.tuplet = value
-                .try_into()
-                .map_err(|e| format!("error converting supplied value for tuplet: {e}"));
-            self
-        }
-        pub fn space<T>(mut self, value: T) -> Self
-        where
-            T: ::std::convert::TryInto<::std::option::Option<super::Space>>,
-            T::Error: ::std::fmt::Display,
-        {
-            self.space = value
-                .try_into()
-                .map_err(|e| format!("error converting supplied value for space: {e}"));
-            self
-        }
-        pub fn multi_note_tremolo<T>(mut self, value: T) -> Self
-        where
-            T: ::std::convert::TryInto<::std::option::Option<super::MultiNoteTremolo>>,
-            T::Error: ::std::fmt::Display,
-        {
-            self.multi_note_tremolo = value.try_into().map_err(|e| {
-                format!("error converting supplied value for multi_note_tremolo: {e}")
-            });
-            self
-        }
-    }
-    impl ::std::convert::TryFrom<SequenceContentItem> for super::SequenceContentItem {
-        type Error = super::error::ConversionError;
-        fn try_from(
-            value: SequenceContentItem,
-        ) -> ::std::result::Result<Self, super::error::ConversionError> {
-            Ok(Self {
-                event: value.event?,
-                grace: value.grace?,
-                tuplet: value.tuplet?,
-                space: value.space?,
-                multi_note_tremolo: value.multi_note_tremolo?,
-            })
-        }
-    }
-    impl ::std::convert::From<super::SequenceContentItem> for SequenceContentItem {
-        fn from(value: super::SequenceContentItem) -> Self {
-            Self {
-                event: Ok(value.event),
-                grace: Ok(value.grace),
-                tuplet: Ok(value.tuplet),
-                space: Ok(value.space),
-                multi_note_tremolo: Ok(value.multi_note_tremolo),
             }
         }
     }
