@@ -10,7 +10,7 @@ using the patched version of Typify via the following command, and
 additional comments and Clippy allow attributes added.
 
 ```bash
-cargo typify w3c-mnx/docs/mnx-schema.json src/mnx.rs
+cargo typify w3c-mnx/docs/mnx-schema.json --output src/mnx.rs
 ```
 
 The W3C MNX schema and examples are an ongoing work-in-progress and likely to
